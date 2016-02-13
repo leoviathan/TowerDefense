@@ -1,5 +1,5 @@
 ﻿// ------------------------------------------------------------------------------------------------------------
-// 							 Enemy.cs
+// 							 LifeBarBehaviour.cs
 // 				 Copyright (c) 2016 Leonardo Lopes
 //  	Authors: Leonardo M. Lopes <euleoo@gmail.com> - http://about.me/leonardo_lopes
 // ------------------------------------------------------------------------------------------------------------
@@ -7,24 +7,17 @@
 using UnityEngine;
 using System.Collections;
 
-public class Enemy : MonoBehaviour {
-	public float life = 100f;
-	public LifeBarBehaviour lifeBar;
+public class LifeBarBehaviour : MonoBehaviour {
+	public GameObject currentLifeBar;
 
-	private float initialLife;
+	public void UpdateBar(float lifePercentage){
+		if(lifePercentage <= 0)
+			lifePercentage = 0f;
 
-	void Start(){
-		this.initialLife = life;
-	}
+		Vector3 barScale = currentLifeBar.transform.localScale;
 
-	public void Damage(float amount){
-		if(amount > 0){
-			life -= amount;
+		barScale.x = lifePercentage;
 
-			lifeBar.UpdateBar(life / this.initialLife);
-
-			if(life <= 0)
-				Destroy(this.gameObject);
-		}
+		currentLifeBar.transform.localScale = barScale;
 	}
 }
