@@ -1,5 +1,5 @@
 ﻿// ------------------------------------------------------------------------------------------------------------
-// 							 ProjectileBehaviour.cs
+// 							 ScoreLabel.cs
 // 				 Copyright (c) 2016 Leonardo Lopes
 //  	Authors: Leonardo M. Lopes <euleoo@gmail.com> - http://about.me/leonardo_lopes
 // ------------------------------------------------------------------------------------------------------------
@@ -7,23 +7,22 @@
 using UnityEngine;
 using System.Collections;
 
-public class ProjectileBehaviour : MonoBehaviour {
-	public float damagePower = 1f;
+using UnityEngine.UI;
 
+[RequireComponent (typeof(Text))]
+public class ScoreLabel : MonoBehaviour {
+	private GameController gameController;
+	private Text label;
+	
 	// Use this for initialization
 	void Start () {
-	
+		this.gameController = FindObjectOfType<GameController>();
+		this.label = GetComponent<Text>();
+		
+		InvokeRepeating("UpdateLabel", 0, .2f);
 	}
 	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
-	void OnCollisionEnter(Collision collision) {
-		if(collision.gameObject.tag == "Enemy")
-			collision.gameObject.SendMessage("Damage", this.damagePower, SendMessageOptions.DontRequireReceiver);
-
-		Destroy(this.gameObject);
+	void UpdateLabel(){
+		this.label.text = string.Format("Score: {0}", this.gameController.Score);
 	}
 }

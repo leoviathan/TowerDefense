@@ -1,30 +1,22 @@
 ﻿// ------------------------------------------------------------------------------------------------------------
-// 							 Enemy.cs
+// 							 DestinationBehaviour.cs
 // 				 Copyright (c) 2016 Leonardo Lopes
 //  	Authors: Leonardo M. Lopes <euleoo@gmail.com> - http://about.me/leonardo_lopes
 // ------------------------------------------------------------------------------------------------------------
 
 using UnityEngine;
 using System.Collections;
+using System;
 
-public class Enemy : MonoBehaviour {
-	public float life = 100f;
-	public LifeBarBehaviour lifeBar;
+public class DestinationBehaviour : MonoBehaviour {
+	public event Action<GameObject> OnEnemyReachedDestination;
 
-	private float initialLife;
+	void OnTriggerEnter(Collider other) {
+		if(other.gameObject.tag == "Enemy"){
+			if(OnEnemyReachedDestination != null)
+				OnEnemyReachedDestination(other.gameObject);
 
-	void Start(){
-		this.initialLife = life;
-	}
-
-	public void Damage(float amount){
-		if(amount > 0){
-			life -= amount;
-
-			lifeBar.UpdateBar(life / this.initialLife);
-
-			if(life <= 0)
-				Destroy(this.gameObject);
+			Destroy(other.gameObject);
 		}
 	}
 }
