@@ -9,6 +9,7 @@ using System.Collections;
 using System;
 
 public class WaveManager : MonoBehaviour {
+	public event Action<Wave> OnWaveStarted;
 	public event Action<Wave> OnWaveFinished;
 	public event Action AllWavesFinished;
 
@@ -24,15 +25,20 @@ public class WaveManager : MonoBehaviour {
 			return waves[currentWaveIndex];
 		}
 	}
-	
-	void Start () {
-		this.spawner = FindObjectOfType<Spawner>();
 
+	public void StartNewWave(){
 		StartWave(waves[currentWaveIndex]);
 	}
 
+	void Start () {
+		this.spawner = FindObjectOfType<Spawner>();
+	}
+
 	void StartWave(Wave wave){
-		InvokeRepeating("ExecuteWave", wave.startDelay, 1f / wave.frequency);
+		InvokeRepeating("ExecuteWave", 0f, 1f / wave.frequency);
+
+		if(OnWaveStarted != null)
+			OnWaveStarted(wave);
 	}
 
 	void StopWave(Wave wave){
@@ -47,11 +53,7 @@ public class WaveManager : MonoBehaviour {
 		if(currentWaveIndex >= waves.Length){
 			if(AllWavesFinished != null)
 				AllWavesFinished();
-
-			return;
 		}
-		else
-			StartWave(waves[currentWaveIndex]);
 	}
 
 	void ExecuteWave(){

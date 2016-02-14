@@ -46,6 +46,7 @@ public class CannonBehaviour : MonoBehaviour {
 		//Debug.Log("Fire!");
 
 		GameObject projectile = Instantiate<GameObject>(projectilePrefab);
+		projectile.transform.parent = this.transform.parent;
 		projectile.transform.position = this.canonEnding.transform.position;
 		projectile.GetComponent<Rigidbody>().AddForce(this.transform.forward * firePower);
 	}

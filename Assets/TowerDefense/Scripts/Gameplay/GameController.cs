@@ -6,6 +6,7 @@
 
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class GameController : MonoBehaviour {
 	public int startingLives = 20;
@@ -14,6 +15,10 @@ public class GameController : MonoBehaviour {
 	private int lives;
 	private int gold;
 	private int score;
+
+	private WaveManager waveManager;
+	private bool allWavesFinished = false;
+	[SerializeField]private int aliveEnemies = 0;//Just for editor debuging
 
 	public int Lives {
 		get {
@@ -38,12 +43,29 @@ public class GameController : MonoBehaviour {
 		this.gold = startingGold;
 
 		FindObjectOfType<DestinationBehaviour>().OnEnemyReachedDestination += HandleOnEnemyReachedDestination;
-		FindObjectOfType<Spawner>().OnGameObjectSpawned += (GameObject obj) => {
+		Spawner spawner = FindObjectOfType<Spawner>();
+		spawner.OnGameObjectSpawned += (GameObject obj) => {
 			obj.GetComponent<Enemy>().OnEnemyDied += HandleOnEnemyDied;
 		};
 
-		WaveManager waveManager = FindObjectOfType<WaveManager>();
+		waveManager = FindObjectOfType<WaveManager>();
 		waveManager.AllWavesFinished += WavesFinished;
+
+		//We check for enemies every second to start a new wave
+		InvokeRepeating("CheckForEnemies", 0, 1f);
+	}
+
+	void CheckForEnemies(){
+		//Debug.Log("Checking for enemies");
+
+		aliveEnemies = GameObject.FindGameObjectsWithTag("Enemy").Length;
+
+		if(aliveEnemies == 0){
+			if(allWavesFinished)
+				Victory();
+			else
+				waveManager.StartNewWave();
+		}
 	}
 
 	void HandleOnEnemyDied (Enemy enemy)
@@ -66,6 +88,11 @@ public class GameController : MonoBehaviour {
 
 	void WavesFinished ()
 	{
-		Debug.Log("Waves finished!");
+		allWavesFinished = true;
+		//Debug.Log("Waves finished!");
+	}
+
+	void Victory(){
+		Debug.Log("Victory!");
 	}
 }

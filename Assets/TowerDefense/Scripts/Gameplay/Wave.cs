@@ -10,7 +10,6 @@ using UnityEngine;
 [System.Serializable]
 public class Wave {
 	public GameObject objectToSpawn;
-	public float startDelay;
 	public float frequency;
 	public float duration;
 }

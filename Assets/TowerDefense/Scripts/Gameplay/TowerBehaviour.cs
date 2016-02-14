@@ -35,19 +35,16 @@ public class TowerBehaviour : MonoBehaviour {
 	void SelectBestTarget(){
 		ClearEnemiesList();
 
-		if(enemiesInRange.Count == 0)
+		if(preferedTarget != null)
 			return;
 
-		if(preferedTarget == null)
-			preferedTarget = enemiesInRange[0];
-
-		float lowestDistance = Vector3.Distance(preferedTarget.transform.position, this.transform.position);
+		float farthestDistance = 0f;
 
 		foreach(GameObject enemy in enemiesInRange){
 			if(enemy == null)
 				continue;
 
-			if(Vector3.Distance(enemy.transform.position, this.transform.position) < lowestDistance)
+			if(Vector3.Distance(enemy.transform.position, this.transform.position) >= farthestDistance)
 				preferedTarget = enemy;
 		}
 	}
@@ -66,5 +63,13 @@ public class TowerBehaviour : MonoBehaviour {
 	public void EnemyOutOfRange(GameObject enemy){
 		if(enemiesInRange.Contains(enemy))
 			enemiesInRange.Remove(enemy);
+
+		if(enemiesInRange.Count == 0){
+			preferedTarget = null;
+			return;
+		}
+
+		if(preferedTarget == enemy)
+			preferedTarget = null;
 	}
 }

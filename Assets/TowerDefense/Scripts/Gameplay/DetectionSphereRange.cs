@@ -10,11 +10,11 @@ using System.Collections;
 public class DetectionSphereRange : MonoBehaviour {
 	void OnTriggerEnter(Collider other) {
 		if(other.gameObject.tag == "Enemy")
-			SendMessageUpwards("EnemyInRange", other.gameObject, SendMessageOptions.DontRequireReceiver);
+			SendMessageUpwards("EnemyInRange", other.gameObject);
 	}
 
-	void OnTriggerExti(Collider other){
+	void OnTriggerExit(Collider other){
 		if(other.gameObject.tag == "Enemy")
-			SendMessageUpwards("EnemyOutOfRange", other.gameObject, SendMessageOptions.DontRequireReceiver);
+			SendMessageUpwards("EnemyOutOfRange", other.gameObject);
 	}
 }
