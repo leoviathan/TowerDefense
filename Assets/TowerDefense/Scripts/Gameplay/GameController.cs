@@ -7,8 +7,12 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public class GameController : MonoBehaviour {
+	public event Action OnLevelFinished;
+	public event Action OnLevelFailed;
+
 	public int startingLives = 20;
 	public int startingGold = 20;
 
@@ -61,7 +65,7 @@ public class GameController : MonoBehaviour {
 		aliveEnemies = GameObject.FindGameObjectsWithTag("Enemy").Length;
 
 		if(aliveEnemies == 0){
-			if(allWavesFinished)
+			if(allWavesFinished && lives > 0)
 				Victory();
 			else
 				waveManager.StartNewWave();
@@ -78,21 +82,36 @@ public class GameController : MonoBehaviour {
 	{
 		this.lives -= enemy.GetComponent<Enemy>().damage;
 
-		if(this.lives <= 0)
+		if(this.lives <= 0){
+			this.lives = 0;
 			GameOver();
-	}
-
-	void GameOver(){
-		Debug.Log("Game over!");
+		}
 	}
 
 	void WavesFinished ()
 	{
 		allWavesFinished = true;
-		//Debug.Log("Waves finished!");
 	}
 
 	void Victory(){
 		Debug.Log("Victory!");
+
+		if(OnLevelFinished != null)
+			OnLevelFinished();
+
+		PauseGame();
+	}
+
+	void GameOver(){
+		Debug.Log("Game over!");
+
+		if(OnLevelFailed != null)
+			OnLevelFailed();
+
+		PauseGame();
+	}
+
+	void PauseGame(){
+		Time.timeScale = 0f;
 	}
 }

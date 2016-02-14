@@ -57,7 +57,8 @@ public class WaveManager : MonoBehaviour {
 	}
 
 	void ExecuteWave(){
-		spawner.SpawnObject(CurrentWave.objectToSpawn);
+		foreach(GameObject spawObj in CurrentWave.objectsToSpawn)
+			spawner.SpawnObject(spawObj);
 
 		waveTimer += 1f / CurrentWave.frequency;
 

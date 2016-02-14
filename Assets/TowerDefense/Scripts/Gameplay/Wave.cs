@@ -9,7 +9,7 @@ using UnityEngine;
 
 [System.Serializable]
 public class Wave {
-	public GameObject objectToSpawn;
+	public GameObject[] objectsToSpawn;
 	public float frequency;
 	public float duration;
 }

@@ -26,6 +26,23 @@ public class WaveLabel : MonoBehaviour {
 	void UpdateLabel (Wave wave)
 	{
 		waveCount++;
-		this.label.text = string.Format("Wave {0}: {1} {2}", waveCount, wave.duration * wave.frequency, wave.objectToSpawn.name);
+		this.label.text = string.Format("Wave {0}: ", waveCount);
+
+
+
+		if(wave.objectsToSpawn.Length > 1){
+			this.label.text += " Group of ";
+		}
+
+		this.label.text += wave.duration * wave.frequency * wave.objectsToSpawn.Length + " ";		
+
+		int objCount = 0;
+		foreach(GameObject objectToSpawn in wave.objectsToSpawn){
+			objCount++;
+			this.label.text += objectToSpawn.name;
+
+			if(objCount < wave.objectsToSpawn.Length)
+				this.label.text += " and ";
+		}
 	}
 }
